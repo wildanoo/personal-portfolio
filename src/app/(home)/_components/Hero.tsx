@@ -5,7 +5,7 @@ import { GoDownload } from "react-icons/go";
 
 const HeroSection = () => {
   return (
-    <div className="flex pt-12">
+    <div className="flex py-12">
       <div className="flex-1 flex flex-col justify-center gap-2">
         <div className="text-primary">Hello, I am</div>
         <div className="semibold-64">Wildan Aryo B</div>
