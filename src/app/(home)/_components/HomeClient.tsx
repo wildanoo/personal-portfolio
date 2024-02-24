@@ -4,6 +4,7 @@ import Header from "./Header";
 import HeroSection from "./Hero";
 import Experiences from "./Experiences";
 import Portfolio from "./Portfolio";
+import Articles from "./Articles";
 
 const HomeClient = () => {
   return (
@@ -13,6 +14,7 @@ const HomeClient = () => {
         <HeroSection />
         <Experiences />
         <Portfolio />
+        <Articles />
       </div>
     </main>
   );
