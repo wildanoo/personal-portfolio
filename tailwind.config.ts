@@ -58,7 +58,7 @@ const config = {
         },
         grey: {
           description: "#7F7F7F"
-        }
+        },
       },
       borderRadius: {
         lg: "var(--radius)",

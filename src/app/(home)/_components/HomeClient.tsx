@@ -5,6 +5,7 @@ import HeroSection from "./Hero";
 import Experiences from "./Experiences";
 import Portfolio from "./Portfolio";
 import Articles from "./Articles";
+import Contact from "./Contact";
 
 const HomeClient = () => {
   return (
@@ -15,6 +16,7 @@ const HomeClient = () => {
         <Experiences />
         <Portfolio />
         <Articles />
+        <Contact />
       </div>
     </main>
   );
