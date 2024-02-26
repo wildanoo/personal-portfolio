@@ -19,7 +19,9 @@ const HeroSection = () => {
           <Button>Contact Me</Button>
           <div className="flex gap-5 items-center cursor-pointer">
             <div className="font-semibold">Download CV</div>
-            <div><GoDownload size={24} className="text-green-primary"/></div>
+            <div>
+              <GoDownload size={24} className="text-green-primary" />
+            </div>
           </div>
         </div>
       </div>
