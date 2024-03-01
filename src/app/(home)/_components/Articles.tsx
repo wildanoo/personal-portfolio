@@ -9,7 +9,9 @@ const Articles = () => {
         <div className="text-3xl font-medium">My Personal Thoughts</div>
       </div>
       <div>
-        <div className="text-sm text-green-primary cursor-pointer flex justify-end">Explore All Articles</div>
+        <div className="text-sm text-green-primary cursor-pointer flex justify-end">
+          Explore All Articles
+        </div>
         <div className="flex justify-center gap-5">
           <div className="flex flex-col gap-2.5 px-2.5 justify-center text-center">
             <div className="flex justify-center">
@@ -22,9 +24,9 @@ const Articles = () => {
             </div>
             <div className="text-xl font-medium">Landing Page Design</div>
             <div className="text-sm text-grey-description">
-              is simply dummy text of the printing and typesetting industry.
+              {`is simply dummy text of the printing and typesetting industry.
               Lorem Ipsum has been the industry's standard dummy text ever since
-              the 1500s
+              the 1500s`}
             </div>
           </div>
 
@@ -39,9 +41,9 @@ const Articles = () => {
             </div>
             <div className="text-xl font-medium">Mobile App Design</div>
             <div className="text-sm text-grey-description">
-              is simply dummy text of the printing and typesetting industry.
+              {`is simply dummy text of the printing and typesetting industry.
               Lorem Ipsum has been the industry's standard dummy text ever since
-              the 1500s
+              the 1500s`}
             </div>
           </div>
 
@@ -56,12 +58,11 @@ const Articles = () => {
             </div>
             <div className="text-xl font-medium">Branding</div>
             <div className="text-sm text-grey-description">
-              is simply dummy text of the printing and typesetting industry.
+              {`is simply dummy text of the printing and typesetting industry.
               Lorem Ipsum has been the industry's standard dummy text ever since
-              the 1500s
+              the 1500s`}
             </div>
           </div>
-          
         </div>
       </div>
     </div>

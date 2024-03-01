@@ -1,19 +1,43 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { IoMdClose } from "react-icons/io";
+import { robotoCondensed } from "@/app/fonts";
 
 const Header = () => {
   const [isExpand, setExpand] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const offset = window.scrollY;
+      if (offset > 50) {
+        setScrolled(true);
+      } else {
+        setScrolled(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
   return (
-    <header className="sticky top-0  bg-white/[.80]">
-      <nav className="">
-        <div className="mx-auto max-w-7xl px-2 sm:px-4 lg:px-8">
+    <header
+      className={`sticky top-0 w-full  ${scrolled ? "bg-white/[.9]" : ""}`}
+    >
+      <nav className="w-full max-w-[1200px] mx-auto">
+        <div className="mx-auto max-w-7xl px-5 sm:px-4 lg:px-8">
           <div className="relative flex h-16 items-center justify-between">
             <div className="flex flex-1 items-center justify-between sm:items-stretch ">
-              <div className="flex flex-shrink-0 items-center text-3xl font-medium">
+              <div
+                className={`flex flex-shrink-0 items-center text-2xl font-medium ${robotoCondensed.className}`}
+              >
                 WEABE
               </div>
               <div className="hidden sm:ml-6 sm:block">
@@ -63,7 +87,7 @@ const Header = () => {
         </div>
         {/* <!-- Mobile menu, show/hide based on menu state. --> */}
         <div
-          className={`sm:hidden w-[40%] absolute right-0 bg-gray-400 rounded-lg ${
+          className={`sm:hidden w-[40%] absolute right-0 bg-white shadow-lg rounded-lg ${
             isExpand ? "block" : "hidden"
           }`}
           id="mobile-menu"
@@ -78,25 +102,25 @@ const Header = () => {
             </a>
             <a
               href="#"
-              className="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium"
+              className="text-black hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium"
             >
               EXPERIENCES
             </a>
             <a
               href="#"
-              className="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium"
+              className="text-black hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium"
             >
               PORTFOLIO
             </a>
             <a
               href="#"
-              className="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium"
+              className="text-black hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium"
             >
               ARTICLES
             </a>
             <a
               href="#"
-              className="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium"
+              className="text-black hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium"
             >
               <Button>Contact Me</Button>
             </a>

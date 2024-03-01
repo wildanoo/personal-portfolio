@@ -7,7 +7,7 @@ const Experiences = () => {
       <div className="flex flex-col items-center py-3">
         <div className="text-green-primary">EXPERIENCES & SKILLS</div>
         <div className="text-3xl font-medium">
-          Experience & Tech That I've Used{" "}
+          {`Experience & Tech That I've Used`}
         </div>
       </div>
       <div className="flex justify-evenly mt-10">

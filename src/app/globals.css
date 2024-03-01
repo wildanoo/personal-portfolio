@@ -74,7 +74,12 @@
     @apply bg-background text-foreground;
   }
 
+  .semibold-36 {
+    @apply font-semibold text-[36px];
+
+  }
   .semibold-64 {
     @apply font-semibold text-[64px];
   }
+
 }
