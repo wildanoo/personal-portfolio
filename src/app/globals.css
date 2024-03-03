@@ -76,7 +76,12 @@
 
   .semibold-36 {
     @apply font-semibold text-[36px];
-
+  }
+  .semibold-42 {
+    @apply font-semibold text-[42px];
+  }
+  .semibold-54 {
+    @apply font-semibold text-[54px];
   }
   .semibold-64 {
     @apply font-semibold text-[64px];

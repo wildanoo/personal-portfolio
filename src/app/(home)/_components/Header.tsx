@@ -95,32 +95,32 @@ const Header = () => {
           <div className="space-y-1 px-2 pb-3 pt-2">
             <a
               href="#"
-              className="bg-gray-900 text-white block rounded-md px-3 py-2 text-base font-medium"
+              className="bg-primary text-white block rounded-md px-3 py-2 text-base font-medium"
               aria-current="page"
             >
               ABOUT ME
             </a>
             <a
               href="#"
-              className="text-black hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium"
+              className="text-black hover:bg-gray-500 hover:text-white block rounded-md px-3 py-2 text-base font-medium"
             >
               EXPERIENCES
             </a>
             <a
               href="#"
-              className="text-black hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium"
+              className="text-black hover:bg-gray-500 hover:text-white block rounded-md px-3 py-2 text-base font-medium"
             >
               PORTFOLIO
             </a>
             <a
               href="#"
-              className="text-black hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium"
+              className="text-black hover:bg-gray-500 hover:text-white block rounded-md px-3 py-2 text-base font-medium"
             >
               ARTICLES
             </a>
             <a
               href="#"
-              className="text-black hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium"
+              className="text-black hover:bg-gray-500 hover:text-white block rounded-md px-3 py-2 text-base font-medium"
             >
               <Button>Contact Me</Button>
             </a>
