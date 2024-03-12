@@ -29,7 +29,7 @@ const Header = () => {
 
   return (
     <header
-      className={`sticky top-0 w-full  ${scrolled ? "bg-white/[.9]" : ""}`}
+      className={`sticky top-0 w-full z-[999] ${scrolled ? "bg-white/[.8] backdrop-blur-sm" : ""}`}
     >
       <nav className="w-full max-w-[1200px] mx-auto">
         <div className="mx-auto max-w-7xl px-5 sm:px-4 lg:px-8">
