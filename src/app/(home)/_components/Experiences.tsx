@@ -3,7 +3,7 @@ import React from "react";
 
 const Experiences = () => {
   return (
-    <div className="py-12">
+    <div className="py-12" id="experience">
       <div className="flex flex-col items-center py-3">
         <div className="text-green-primary text-sm sm:text-base">EXPERIENCES & SKILLS</div>
         <div className="text-xl lg:text-3xl font-medium">

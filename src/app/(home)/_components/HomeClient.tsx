@@ -10,8 +10,7 @@ import Footer from "./Footer";
 
 const HomeClient = () => {
   return (
-    <main className="flex flex-col min-h-screen w-full items-center bg-gradient-to-b from-[#ECB22E]/[.2]  bg-opacity-10 from-1% to-20%">
-      <Header />
+    <>
       <div className="px-0 lg:px-8 sm:px-2 max-w-[1200px] w-full ">
         <HeroSection />
         <Experiences />
@@ -21,10 +20,7 @@ const HomeClient = () => {
       <div className="px-0 lg:px-8 sm:px-2 w-full bg-gradient-to-b from-[#ECB22E]/[.2]  bg-opacity-10	from-10% ">
         <Contact />
       </div>
-      <div className="bg-green-primary w-full">
-        <Footer />
-      </div>
-    </main>
+    </>
   );
 };
 
