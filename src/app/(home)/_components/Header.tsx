@@ -63,16 +63,21 @@ const Header = () => {
                   >
                     PORTFOLIO
                   </Link>
-                  <Link
+                  {/* <Link
                     href={"/article"}
                     className="text-black rounded-md px-3 py-2 text-sm font-medium"
                   >
                     ARTICLES
-                  </Link>
+                  </Link> */}
                 </div>
               </div>
               <div className="hidden sm:flex absolute inset-y-0 right-0  items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-                <Button>Contact Me</Button>
+                <Link
+                  href={"/#contact"}
+                  className="text-black rounded-md px-3 py-2 text-sm font-medium"
+                >
+                  <Button>Contact Me</Button>
+                </Link>
               </div>
               <div
                 className="sm:hidden cursor-pointer"
@@ -113,18 +118,18 @@ const Header = () => {
             >
               PORTFOLIO
             </Link>
-            <Link
+            {/* <Link
               href={"/article"}
               className="text-black hover:bg-gray-500 hover:text-white block rounded-md px-3 py-2 text-base font-medium"
             >
               ARTICLES
-            </Link>
-            <Link
+            </Link> */}
+            {/* <Link
               href={"/"}
               className="text-black hover:bg-gray-500 hover:text-white block rounded-md px-3 py-2 text-base font-medium"
             >
               <Button>Contact Me</Button>
-            </Link>
+            </Link> */}
           </div>
         </div>
       </nav>

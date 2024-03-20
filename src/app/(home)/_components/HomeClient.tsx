@@ -15,7 +15,7 @@ const HomeClient = () => {
         <HeroSection />
         <Experiences />
         <Portfolio />
-        <Articles />
+        {/* <Articles /> */}
       </div>
       <div className="px-0 lg:px-8 sm:px-2 w-full bg-gradient-to-b from-[#ECB22E]/[.2]  bg-opacity-10	from-10% ">
         <Contact />

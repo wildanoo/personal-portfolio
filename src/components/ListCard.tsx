@@ -9,12 +9,24 @@ type ListCard = {
   description: string;
   number: string;
   link: string;
+  align?: "left" | "right";
 };
 
-const ListCard: FC<ListCard> = ({ imgUrl, description, title, number, link }) => {
+const ListCard: FC<ListCard> = ({
+  imgUrl,
+  description,
+  title,
+  number,
+  link,
+  align = "left",
+}) => {
   return (
     <div>
-      <div className="flex flex-col gap-5 sm:flex-row">
+      <div
+        className={`flex flex-col gap-5 ${
+          align == "left" ? "sm:flex-row" : "sm:flex-row-reverse"
+        }`}
+      >
         <div className="flex-1 flex justify-center">
           <Image alt="homecare-img" src={imgUrl} width={550} height={410} />
         </div>
