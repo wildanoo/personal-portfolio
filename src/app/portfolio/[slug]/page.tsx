@@ -18,7 +18,7 @@ const PortfolioDetail = ({ params }: { params: { slug: string } }) => {
         {data.description}
       </div>
       <div>
-        <a href="https://homecare.dkonsul.com/">
+        <a href={data.link}>
           <Button>Live link</Button>
         </a>
       </div>
