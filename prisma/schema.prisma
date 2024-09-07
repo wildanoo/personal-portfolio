@@ -28,16 +28,40 @@ model User {
 }
 
 model Post {
-  id          String        @id @default(cuid())
-  title       String
-  content     String
-  userId      String
-  user        User          @relation(fields: [userId], references: [id])
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
-  tagsOnPosts TagsOnPosts[]
+  id              String        @id @default(cuid())
+  title           String
+  content         String
+  excerpt         String
+  slug            String
+  metaTitle       String?
+  metaDescription String?
+  metaKeywords    String?
+  featuredImage   String?
+  authorId        String
+  categoryId      String
+  status          PostStatus    @default(DRAFT)
+  visibility      Visibility    @default(PUBLIC)
+  publishedOn     DateTime?     
+  user            User          @relation(fields: [authorId], references: [id])
+  category        Category      @relation(fields: [categoryId], references: [id])
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  tagsOnPosts     TagsOnPosts[]
 
   @@map("post")
+}
+
+// Tambahan: Enum untuk status artikel
+enum PostStatus {
+  PUBLISHED
+  DRAFT
+  PENDING
+}
+
+// Tambahan: Enum untuk visibilitas artikel
+enum Visibility {
+  PUBLIC
+  PRIVATE
 }
 
 model Category {
@@ -45,13 +69,14 @@ model Category {
   name      String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  posts     Post[]
 
   @@map("category")
 }
 
 model Tag {
   id          String        @id @default(cuid())
-  name        String
+  name        String        @unique // Tambahkan @unique di sini
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
   tagsOnPosts TagsOnPosts[]

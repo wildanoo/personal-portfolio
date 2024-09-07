@@ -1,9 +1,8 @@
 import { Button } from "@/components/ui/button";
-import DashboardClient from "./components/DashboardClient";
 
 const Dashboard = () => {
   return (
-    <DashboardClient>
+    <>
       <div className="flex items-center">
         <h1 className="text-lg font-semibold md:text-2xl">Inventory</h1>
       </div>
@@ -21,7 +20,7 @@ const Dashboard = () => {
           <Button className="mt-4">Add Product</Button>
         </div>
       </div>
-    </DashboardClient>
+    </>
   );
 };
 

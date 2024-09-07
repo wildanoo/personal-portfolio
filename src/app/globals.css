@@ -13,7 +13,7 @@
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
  
-    --primary: 135, 14%, 48%;
+    --primary: 135 14% 48%;
     --primary-foreground: 210 40% 98%;
  
     --secondary: 210 40% 96.1%;
@@ -87,4 +87,101 @@
     @apply font-semibold text-[64px];
   }
 
+}
+ 
+/* Gaya kustom untuk MdEditor */
+@layer components {
+  .mdeditor-medium-style {
+    @apply font-sans;
+  }
+
+  .mdeditor-medium-style .rc-md-editor {
+    @apply border-none shadow-none;
+  }
+
+  .mdeditor-medium-style .rc-md-navigation {
+    @apply bg-white border-b border-gray-200 py-2.5;
+  }
+
+  .mdeditor-medium-style .rc-md-editor .editor-container {
+    @apply bg-white;
+  }
+
+  .mdeditor-medium-style .rc-md-editor .section-container.input {
+    @apply p-5 text-lg leading-relaxed;
+  }
+
+  .mdeditor-medium-style .rc-md-editor .section-container.input textarea {
+    @apply text-gray-800;
+  }
+
+  .mdeditor-medium-style .rc-md-editor .section-container.input textarea::placeholder {
+    @apply text-gray-400;
+  }
+
+  .mdeditor-medium-style .rc-md-editor .custom-html-style {
+    @apply p-5 text-lg leading-relaxed text-gray-800;
+  }
+
+  .mdeditor-medium-style .rc-md-editor .custom-html-style h1,
+  .mdeditor-medium-style .rc-md-editor .custom-html-style h2,
+  .mdeditor-medium-style .rc-md-editor .custom-html-style h3,
+  .mdeditor-medium-style .rc-md-editor .custom-html-style h4,
+  .mdeditor-medium-style .rc-md-editor .custom-html-style h5,
+  .mdeditor-medium-style .rc-md-editor .custom-html-style h6 {
+    @apply font-bold mt-6 mb-2;
+  }
+
+  .mdeditor-medium-style .rc-md-editor .custom-html-style p {
+    @apply mb-4;
+  }
+
+  .mdeditor-medium-style .rc-md-editor .custom-html-style blockquote {
+    @apply border-l-4 border-gray-800 pl-5 ml-0 italic text-gray-600;
+  }
+
+  .mdeditor-medium-style .rc-md-editor .custom-html-style pre {
+    @apply bg-[#272822] text-[#f8f8f2] p-4 rounded-md overflow-x-auto;
+  }
+
+  .mdeditor-medium-style .rc-md-editor .custom-html-style code {
+    @apply font-mono text-sm;
+  }
+
+  /* Monokai syntax highlighting */
+  .mdeditor-medium-style .rc-md-editor .custom-html-style pre code {
+    @apply text-[#f8f8f2];
+  }
+
+  .mdeditor-medium-style .rc-md-editor .custom-html-style pre code .keyword {
+    @apply text-[#f92672];
+  }
+
+  .mdeditor-medium-style .rc-md-editor .custom-html-style pre code .string {
+    @apply text-[#e6db74];
+  }
+
+  .mdeditor-medium-style .rc-md-editor .custom-html-style pre code .number {
+    @apply text-[#ae81ff];
+  }
+
+  .mdeditor-medium-style .rc-md-editor .custom-html-style pre code .function {
+    @apply text-[#a6e22e];
+  }
+
+  .mdeditor-medium-style .rc-md-editor .custom-html-style pre code .comment {
+    @apply text-[#75715e];
+  }
+
+  .mdeditor-medium-style .rc-md-editor .custom-html-style pre code .class-name {
+    @apply text-[#66d9ef];
+  }
+
+  .mdeditor-medium-style .rc-md-editor .custom-html-style pre code .operator {
+    @apply text-[#f8f8f2];
+  }
+
+  .mdeditor-medium-style .rc-md-editor .custom-html-style pre code .punctuation {
+    @apply text-[#f8f8f2];
+  }
 }
