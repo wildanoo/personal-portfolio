@@ -33,6 +33,17 @@ export async function POST(req: NextRequest) {
       publishedOn,
     } = await req.json();
 
+    const uniqueSlug = await prisma.post.findFirst({
+      where: { slug: slug },
+    });
+
+    if (uniqueSlug) {
+      return NextResponse.json(
+        { error: "Slug has been used" },
+        { status: 400 }
+      );
+    }
+
     // Pastikan categoryId valid
     const category = await prisma.category.findUnique({
       where: { id: categoryId },
@@ -40,7 +51,7 @@ export async function POST(req: NextRequest) {
 
     if (!category) {
       return NextResponse.json(
-        { error: "Kategori tidak ditemukan" },
+        { error: "Category not found" },
         { status: 400 }
       );
     }
@@ -77,7 +88,7 @@ export async function POST(req: NextRequest) {
   } catch (error) {
     console.error("Error creating post:", error);
     return NextResponse.json(
-      { error: "Terjadi kesalahan saat membuat post" },
+      { error: "Error occured when create post" },
       { status: 500 }
     );
   }
@@ -110,7 +121,7 @@ export async function GET() {
   } catch (error) {
     console.error("Error fetching articles:", error);
     return NextResponse.json(
-      { error: "Terjadi kesalahan saat mengambil artikel" },
+      { error: "Error occured when fetch article" },
       { status: 500 }
     );
   }

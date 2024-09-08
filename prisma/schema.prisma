@@ -32,7 +32,7 @@ model Post {
   title           String
   content         String
   excerpt         String
-  slug            String
+  slug            String        @unique
   metaTitle       String?
   metaDescription String?
   metaKeywords    String?
@@ -41,7 +41,7 @@ model Post {
   categoryId      String
   status          PostStatus    @default(DRAFT)
   visibility      Visibility    @default(PUBLIC)
-  publishedOn     DateTime?     
+  publishedOn     DateTime?
   user            User          @relation(fields: [authorId], references: [id])
   category        Category      @relation(fields: [categoryId], references: [id])
   createdAt       DateTime      @default(now())
