@@ -45,33 +45,10 @@ import { parseCookies } from "nookies";
 
 import { STATUS_POST, VISIBILITY_POST } from "../_constants";
 
-const formSchema = z.object({
-  title: z.string().min(2).max(255),
-  content: z.string().min(2),
-  excerpt: z.string().min(2).max(255),
-  slug: z.string().min(2).max(255),
-  metaTitle: z.string().max(255),
-  metaDescription: z.string().max(255),
-  metaKeywords: z.string().max(255),
-  featuredImage: z.string().max(255),
-  authorId: z.string().min(2).max(255),
-  categoryId: z.string().min(2).max(255),
-  status: z.enum(["PUBLISHED", "DRAFT", "PENDING"]),
-  visibility: z.enum(["PUBLIC", "PRIVATE"]),
-  publishedOn: z.date(),
-  tags: z
-    .array(
-      z.object({
-        id: z.string(),
-        text: z.string(),
-      })
-    )
-    .optional(),
-});
-
-import { cn } from "@/lib/utils";
+import { cn, debounce } from "@/lib/utils";
 import MarkdownEditor from "../components/MarkdownEditor";
 import slugify from "@sindresorhus/slugify";
+import { formSchema } from "./schema";
 
 interface Category {
   id: string;
@@ -95,11 +72,6 @@ export default function CreateArticle() {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const { toast } = useToast();
-
-  useEffect(() => {
-    fetchCategories();
-    setAuthorIdFromToken();
-  }, []);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -127,7 +99,14 @@ export default function CreateArticle() {
     formState: { errors },
     setValue,
     getValues,
+    setError,
+    clearErrors,
   } = form;
+
+  useEffect(() => {
+    fetchCategories();
+    setAuthorIdFromToken();
+  }, []);
 
   const fetchCategories = async () => {
     try {
@@ -137,7 +116,7 @@ export default function CreateArticle() {
       console.error("Error fetching categories:", error);
       toast({
         title: "Error",
-        description: "Gagal mengambil daftar kategori",
+        description: "Error get category list",
         variant: "destructive",
       });
     }
@@ -145,7 +124,7 @@ export default function CreateArticle() {
 
   const handleEditorChange = ({ text }: { text: string }) => {
     setContent(text);
-    setValue("content", text); 
+    setValue("content", text);
   };
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
@@ -157,15 +136,15 @@ export default function CreateArticle() {
       };
       await api.post("/posts", body);
       toast({
-        title: "Sukses",
-        description: "Artikel baru berhasil dibuat",
+        title: "Success",
+        description: "Article successfully created",
       });
       router.push("/articles");
     } catch (error) {
       console.error("Error creating article:", error);
       toast({
         title: "Error",
-        description: "Gagal membuat artikel baru",
+        description: "Failed create new article",
         variant: "destructive",
       });
     } finally {
@@ -195,7 +174,7 @@ export default function CreateArticle() {
         console.error("Error decoding token:", error);
         toast({
           title: "Error",
-          description: "Gagal mengatur ID penulis",
+          description: "Failed to set author ID",
           variant: "destructive",
         });
       }
@@ -206,7 +185,30 @@ export default function CreateArticle() {
     const slug = slugify(e.target.value);
     setValue("title", e.target.value);
     setValue("slug", slug);
+    debouncedSlug(slug);
   };
+
+  const handleChangeSlug = async (slug: string) => {
+    try {
+      const body = {
+        slug,
+      };
+      const slugChecked = await api.post("/posts/slug", body);
+      clearErrors("slug");
+      if (slugChecked) {
+        setError("slug", { message: "Slug has been used" });
+      }
+    } catch (error) {
+      console.error("Error check slug:", error);
+      toast({
+        title: "Error",
+        description: "Slug error",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const debouncedSlug = debounce(handleChangeSlug, 500);
 
   return (
     <div className="container mx-auto py-10">
@@ -258,6 +260,10 @@ export default function CreateArticle() {
                               id="slug"
                               {...field}
                               placeholder="article-title-slug"
+                              onChange={(e) => {
+                                setValue("slug", e.target.value);
+                                debouncedSlug(e.target.value);
+                              }}
                             />
                           </FormControl>
                           <FormMessage />
@@ -489,7 +495,6 @@ export default function CreateArticle() {
                 </div>
               </CardContent>
             </Card>
-
             <Card className="flex-1">
               <CardHeader>
                 <CardTitle>Categories</CardTitle>
