@@ -11,7 +11,6 @@ async function fetchAPI(endpoint: string, options: FetchOptions = {}) {
   const url = `${BASE_URL}${endpoint}`;
   
   const headers: Record<string, string> = {
-    'Content-Type': 'application/json',
     ...fetchOptions.headers as Record<string, string>,
   };
   
@@ -40,10 +39,10 @@ export const api = {
     fetchAPI(endpoint, { ...options, method: 'GET' }),
   
   post: (endpoint: string, data: any, options?: FetchOptions) => 
-    fetchAPI(endpoint, { ...options, method: 'POST', body: JSON.stringify(data) }),
+    fetchAPI(endpoint, { ...options, method: 'POST', body: data }),
   
   put: (endpoint: string, data: any, options?: FetchOptions) => 
-    fetchAPI(endpoint, { ...options, method: 'PUT', body: JSON.stringify(data) }),
+    fetchAPI(endpoint, { ...options, method: 'PUT', body: data }),
   
   delete: (endpoint: string, options?: FetchOptions) => 
     fetchAPI(endpoint, { ...options, method: 'DELETE' }),

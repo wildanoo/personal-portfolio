@@ -53,7 +53,7 @@ export default function Categories() {
     e.preventDefault();
     setIsSubmitting(true);
     try {
-      await api.post("/categories", { name: newCategoryName });
+      await api.post("/categories", JSON.stringify({ name: newCategoryName }));
       setNewCategoryName("");
       fetchCategories();
       toast({

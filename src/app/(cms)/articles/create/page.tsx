@@ -157,12 +157,27 @@ export default function CreateArticle() {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setIsLoading(true);
+
     try {
-      const body = {
+      const formatBody = {
         ...values,
         tags: tags.map((tag) => tag.text.trim()),
       };
-      await api.post("/posts", body);
+      const formData = new FormData();
+
+      Object.entries(formatBody).forEach(([key, value]) => {
+        if (value instanceof Date) {
+          formData.append(key, value.toISOString());
+        } else if (Array.isArray(value)) {
+          formData.append(key, JSON.stringify(value));
+        } else if (value instanceof File) {
+          formData.append(key, value);
+        } else if (value !== null && value !== undefined) {
+          formData.append(key, value.toString());
+        }
+      });
+
+      await api.post("/posts", formData);
       toast({
         title: "Success",
         description: "Article successfully created",
