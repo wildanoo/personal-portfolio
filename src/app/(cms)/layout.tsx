@@ -1,6 +1,6 @@
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import DashboardLayoutClient from "./components/DashboardLayout";
+import DashboardLayoutClient from "./_components/DashboardLayout";
 
 export default async function DashboardLayout({
   children,

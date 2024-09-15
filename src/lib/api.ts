@@ -6,7 +6,7 @@ interface FetchOptions extends RequestInit {
   token?: boolean;
 }
 
-async function fetchAPI(endpoint: string, options: FetchOptions = {}) {
+async function fetchAPI<T>(endpoint: string, options: FetchOptions = {}): Promise<T> {
   const { token = true, ...fetchOptions } = options;
   const url = `${BASE_URL}${endpoint}`;
   
@@ -31,19 +31,19 @@ async function fetchAPI(endpoint: string, options: FetchOptions = {}) {
     throw new Error(error.message || 'Terjadi kesalahan pada server');
   }
 
-  return response.json();
+  return response.json() as T;
 }
 
 export const api = {
-  get: (endpoint: string, options?: FetchOptions) => 
-    fetchAPI(endpoint, { ...options, method: 'GET' }),
+  get: <T>(endpoint: string, options?: FetchOptions): Promise<T> => 
+    fetchAPI<T>(endpoint, { ...options, method: 'GET' }),
   
-  post: (endpoint: string, data: any, options?: FetchOptions) => 
-    fetchAPI(endpoint, { ...options, method: 'POST', body: data }),
+  post: <T>(endpoint: string, data: any, options?: FetchOptions): Promise<T> => 
+    fetchAPI<T>(endpoint, { ...options, method: 'POST', body: data }),
   
-  put: (endpoint: string, data: any, options?: FetchOptions) => 
-    fetchAPI(endpoint, { ...options, method: 'PUT', body: data }),
+  put: <T>(endpoint: string, data: any, options?: FetchOptions): Promise<T> => 
+    fetchAPI<T>(endpoint, { ...options, method: 'PUT', body: data }),
   
-  delete: (endpoint: string, options?: FetchOptions) => 
-    fetchAPI(endpoint, { ...options, method: 'DELETE' }),
+  delete: <T>(endpoint: string, options?: FetchOptions): Promise<T> => 
+    fetchAPI<T>(endpoint, { ...options, method: 'DELETE' }),
 };
