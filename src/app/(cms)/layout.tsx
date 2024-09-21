@@ -1,5 +1,6 @@
-import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { cookies } from "next/headers";
+
 import DashboardLayoutClient from "./_components/DashboardLayout";
 
 export default async function DashboardLayout({
@@ -7,10 +8,9 @@ export default async function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const headersList = headers();
-  const token = headersList.get("cookie")?.split("token=")[1];
 
-  if (!token) {
+  const session = cookies().get("session")?.value;
+  if (!session) {
     redirect("/login");
   }
 

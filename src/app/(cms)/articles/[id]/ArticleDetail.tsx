@@ -33,8 +33,8 @@ export default function ArticleDetail() {
 
   const fetchArticle = async () => {
     try {
-      const data = await api.get(`/posts/${params.id}`);
-      data && setArticle(data);
+      const data = await api.get<Article>(`/posts/${params.id}`);
+      setArticle(data);
       setIsLoading(false);
     } catch (error) {
       console.error("Error fetching article:", error);

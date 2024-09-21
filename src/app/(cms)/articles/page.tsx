@@ -36,7 +36,7 @@ export default function Articles() {
 
   const fetchArticles = async () => {
     try {
-      const data = await api.get("/posts");
+      const data = await api.get<Article[]>("/posts");
       setArticles(data);
       setIsLoading(false);
     } catch (error) {
@@ -58,7 +58,7 @@ export default function Articles() {
     );
   }
 
-  return (
+  return (  
     <div className="container mx-auto py-10">
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
