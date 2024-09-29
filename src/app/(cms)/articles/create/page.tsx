@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 
 export default async function Page() {
   const userDetail = await getSession();
-  if(!userDetail) return notFound();
+  if (!userDetail) return notFound();
+  
   return <ArticleClient user={userDetail} />;
 }

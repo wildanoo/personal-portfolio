@@ -1,3 +1,4 @@
+'use client'
 import Cookies from 'js-cookie';
 
 const BASE_URL = '/api'; // Sesuaikan dengan base URL API Anda
@@ -8,14 +9,16 @@ interface FetchOptions extends RequestInit {
 
 async function fetchAPI<T>(endpoint: string, options: FetchOptions = {}): Promise<T> {
   const { token = true, ...fetchOptions } = options;
+
   const url = `${BASE_URL}${endpoint}`;
   
   const headers: Record<string, string> = {
     ...fetchOptions.headers as Record<string, string>,
   };
-  
+
   if (token) {
-    const authToken = Cookies.get('token');
+    const authToken = await Cookies.get('session');
+
     if (authToken) {
       headers['Authorization'] = `Bearer ${authToken}`;
     }
@@ -30,7 +33,6 @@ async function fetchAPI<T>(endpoint: string, options: FetchOptions = {}): Promis
     const error = await response.json();
     throw new Error(error.message || 'Terjadi kesalahan pada server');
   }
-
   return response.json() as T;
 }
 

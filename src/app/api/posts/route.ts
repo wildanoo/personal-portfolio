@@ -5,14 +5,16 @@ import { PostStatus, Visibility } from "@prisma/client";
 import { z } from "zod";
 
 import { cloudinary } from "@/lib/cloudinary";
-import { UploadApiErrorResponse,UploadApiResponse } from "cloudinary";
+import { UploadApiErrorResponse, UploadApiResponse } from "cloudinary";
 
-type UploadResponse = 
-  { success: true; result?: UploadApiResponse } | 
-  { success: false; error: UploadApiErrorResponse };
+type UploadResponse =
+  | { success: true; result?: UploadApiResponse }
+  | { success: false; error: UploadApiErrorResponse };
 
 const uploadToCloudinary = (
-  fileUri: string, fileName: string): Promise<UploadResponse> => {
+  fileUri: string,
+  fileName: string
+): Promise<UploadResponse> => {
   return new Promise((resolve, reject) => {
     cloudinary.uploader
       .upload(fileUri, {
@@ -52,10 +54,7 @@ export async function POST(req: NextRequest) {
   try {
     const token = req.headers.get("Authorization")?.split(" ")[1];
     if (!token) {
-      return NextResponse.json(
-        { error: "Token not found" },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: "Token not found" }, { status: 401 });
     }
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as {
@@ -95,7 +94,7 @@ export async function POST(req: NextRequest) {
     const fileBuffer = await featuredImage.arrayBuffer();
     const mimeType = featuredImage.type;
     const encoding = "base64";
-    const base64Data = Buffer.from(fileBuffer).toString(encoding)
+    const base64Data = Buffer.from(fileBuffer).toString(encoding);
 
     const fileUri = `data:${mimeType};${encoding},${base64Data}`;
     const resImage = await uploadToCloudinary(fileUri, featuredImage.name);
@@ -105,6 +104,7 @@ export async function POST(req: NextRequest) {
         { status: 400 }
       );
     }
+
     const post = await prisma.post.create({
       data: {
         ...dataPost,
@@ -120,6 +120,14 @@ export async function POST(req: NextRequest) {
             assignedBy: userId,
           })),
         },
+      },
+    });
+
+    await prisma.featuredImage.create({
+      data: {
+        imageUrl: resImage.result?.url || "",
+        publicId: resImage.result?.public_id || "",
+        postId: post.id,
       },
     });
 
@@ -151,6 +159,15 @@ export async function GET() {
             name: true,
           },
         },
+        FeaturedImage: {
+          select: {
+            imageUrl: true,
+            publicId: true,
+            post: true
+          },
+        },
+        status: true,
+
       },
       orderBy: { createdAt: "desc" },
     });
@@ -160,6 +177,9 @@ export async function GET() {
       title: article.title,
       categoryName: article.category.name,
       createdAt: article.createdAt.toISOString(),
+      featuredImage: article.FeaturedImage?.[0]?.imageUrl || '',
+      publicImageId: article.FeaturedImage?.[0]?.publicId || '',
+      status: article.status,
     }));
 
     return NextResponse.json(formattedArticles);

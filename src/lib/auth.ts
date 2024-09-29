@@ -95,7 +95,7 @@ export async function login(formData: FormData) {
   const expires = new Date(Date.now() + 3600 * 1000); // 1 jam
   const session = await encrypt(credential);
 
-  cookies().set("session", session, { expires, httpOnly: true });
+  cookies().set("session", session, { expires, httpOnly: false });
   return NextResponse.json({ message: "Login successful" }, { status: 200 });
 }
 
@@ -119,7 +119,7 @@ export async function updateSession(request: NextRequest) {
   res.cookies.set({
     name: "session",
     value: await encrypt(parsed),
-    httpOnly: true,
+    httpOnly: false,
     expires: parsed.expires,
   });
   return res;
