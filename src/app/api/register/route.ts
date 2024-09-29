@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
-import bcrypt from "bcrypt";
+import bcrypt from 'bcryptjs'
 
 const prisma = new PrismaClient();
 
@@ -8,7 +8,6 @@ export async function POST(request: Request) {
   try {
     const { firstName, lastName, email, password } = await request.json();
 
-    console.log(firstName, lastName, email, password)
     // Validasi input
     if (!firstName || !lastName || !email || !password) {
       return NextResponse.json(

@@ -25,7 +25,6 @@ const MdEditor = dynamic(() => import("react-markdown-editor-lite"), {
 
 import "react-markdown-editor-lite/lib/index.css";
 import { Textarea } from "@/components/ui/textarea";
-
 interface Category {
   id: string;
   name: string;
@@ -66,7 +65,7 @@ export default function ArticleForm() {
 
   const fetchArticle = async () => {
     try {
-      const data = await api.get(`/posts/${params.id}`);
+      const data = await api.get<Article>(`/posts/${params.id}`);
       setTitle(data.title);
       setContent(data.content);
       setCategoryId(data.categoryId);
@@ -85,7 +84,7 @@ export default function ArticleForm() {
 
   const fetchCategories = async () => {
     try {
-      const data = await api.get("/categories");
+      const data = await api.get<Category[]>("/categories");
       setCategories(data);
     } catch (error) {
       console.error("Error fetching categories:", error);

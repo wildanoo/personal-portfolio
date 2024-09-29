@@ -29,7 +29,7 @@ const HeroSection = () => {
           </Link>
           <a
             className="flex gap-5 items-center cursor-pointer"
-            href="https://drive.google.com/file/d/10aF-vAM_hjtw1aEnzojG1-iTeOfjQOGm/view?usp=drive_link"
+            href="https://drive.google.com/file/d/167Y_RKDrxjHO9pvPeTRlubVGFVDf6lGQ/view?usp=drive_link"
             download="WildanResume"
           >
             <div className="font-semibold text-sm lg:text-base">
