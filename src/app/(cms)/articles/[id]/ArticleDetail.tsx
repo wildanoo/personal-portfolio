@@ -10,7 +10,6 @@ import { Separator } from "@/components/ui/separator";
 import { Loader2, Calendar, User, Tag, Edit, ArrowLeft } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import ReactMarkdown from "react-markdown";
-
 interface Article {
   id: string;
   title: string;
@@ -22,7 +21,7 @@ interface Article {
 }
 
 export default function ArticleDetail() {
-  const [article, setArticle] = useState<Article | null>(null);
+  const [article, setArticle] = useState<Article>();
   const [isLoading, setIsLoading] = useState(true);
   const params = useParams();
   const router = useRouter();
@@ -34,7 +33,7 @@ export default function ArticleDetail() {
 
   const fetchArticle = async () => {
     try {
-      const data = await api.get(`/posts/${params.id}`);
+      const data = await api.get<Article>(`/posts/${params.id}`);
       setArticle(data);
       setIsLoading(false);
     } catch (error) {

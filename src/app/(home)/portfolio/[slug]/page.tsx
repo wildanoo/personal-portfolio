@@ -1,7 +1,7 @@
 import React from "react";
 import portfolioData from "@/portfolio";
 import { notFound } from "next/navigation";
-import ImgSlider from "@/app/_components/ImgSlider";
+import ImgSlider from "@/app/(home)/_components/ImgSlider";
 import { Button } from "@/components/ui/button";
 
 const PortfolioDetail = ({ params }: { params: { slug: string } }) => {

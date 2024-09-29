@@ -28,7 +28,6 @@ function SignUpForm() {
     setError("");
 
     try {
-      console.log('1', firstName, lastName, email, password)
       const response = await fetch("/api/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },

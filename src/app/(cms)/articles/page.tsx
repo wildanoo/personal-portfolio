@@ -1,11 +1,11 @@
-'use client'
+"use client";
 
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import Link from 'next/link';
-import { api } from '@/lib/api';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { api } from "@/lib/api";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import {
   Table,
   TableBody,
@@ -13,15 +13,19 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
-import { Loader2, PlusCircle, Eye, Edit } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
+} from "@/components/ui/table";
+import { Loader2, PlusCircle, Eye, Edit } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import Image from "next/image";
 
 interface Article {
   id: string;
   title: string;
   categoryName: string;
   createdAt: string;
+  featuredImage: string;
+  publicImageId: string;
+  status: string;
 }
 
 export default function Articles() {
@@ -36,7 +40,7 @@ export default function Articles() {
 
   const fetchArticles = async () => {
     try {
-      const data = await api.get("/posts");
+      const data = await api.get<Article[]>("/posts");
       setArticles(data);
       setIsLoading(false);
     } catch (error) {
@@ -72,8 +76,10 @@ export default function Articles() {
           <Table>
             <TableHeader>
               <TableRow>
+                <TableHead></TableHead>
                 <TableHead>Judul</TableHead>
                 <TableHead>Kategori</TableHead>
+                <TableHead>Status</TableHead>
                 <TableHead>Tanggal Dibuat</TableHead>
                 <TableHead>Aksi</TableHead>
               </TableRow>
@@ -81,9 +87,20 @@ export default function Articles() {
             <TableBody>
               {articles.map((article) => (
                 <TableRow key={article.id}>
+                  <TableCell>
+                    <Image
+                      src={article.featuredImage}
+                      alt={article.title}
+                      width={50}
+                      height={50}
+                    />
+                  </TableCell>
                   <TableCell>{article.title}</TableCell>
                   <TableCell>{article.categoryName}</TableCell>
-                  <TableCell>{new Date(article.createdAt).toLocaleDateString()}</TableCell>
+                  <TableCell>{article.status}</TableCell>
+                  <TableCell>
+                    {new Date(article.createdAt).toLocaleDateString()}
+                  </TableCell>
                   <TableCell>
                     <div className="flex space-x-2">
                       <Button variant="outline" size="sm" asChild>
