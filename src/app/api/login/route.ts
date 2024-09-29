@@ -1,7 +1,11 @@
 import { NextResponse } from 'next/server'
 import { PrismaClient } from '@prisma/client'
-import bcrypt from 'bcrypt'
+import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
+import { serialize } from 'cookie';
+
+const REFRESH_TOKEN_SECRET = process.env.JWT_SECRET as string;
+const ACCESS_TOKEN_SECRET = process.env.REFRESH_JWT_SECRET as string;
 
 const prisma = new PrismaClient()
 
@@ -31,7 +35,7 @@ export async function POST(request: Request) {
     }
 
     // Buat token JWT
-    const token = jwt.sign(
+    const accessToken = jwt.sign(
       { 
         userId: user.id, 
         email: user.email,
@@ -39,19 +43,30 @@ export async function POST(request: Request) {
         lastName: user.lastName
       },
       process.env.JWT_SECRET || 'rahasia',
-      { expiresIn: '1h' }
+      { expiresIn: '15m' }
     )
-
-    return NextResponse.json({ 
-      message: 'Login berhasil', 
-      token,
-      user: {
-        id: user.id,
+    const refreshToken = jwt.sign(
+      { 
+        userId: user.id, 
         email: user.email,
         firstName: user.firstName,
         lastName: user.lastName
-      }
-    }, { status: 200 })
+      },
+      process.env.REFRESH_JWT_SECRET || 'rahasia',
+      { expiresIn: '7d' }
+    )
+
+    const response = NextResponse.json({accessToken})
+
+    response.headers.set('Set-Cookie', serialize('refreshToken', refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV !== 'development',
+      sameSite: 'strict',
+      maxAge: 60 * 60 * 24 * 7, // 7 days
+      path: '/'
+    }));
+
+    return response;
   } catch (error) {
     console.error('Error during login:', error)
     return NextResponse.json({ message: 'Terjadi kesalahan saat login' }, { status: 500 })

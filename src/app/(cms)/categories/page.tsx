@@ -16,44 +16,26 @@ import {
 } from "@/components/ui/table";
 import { Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import useGetAllCategories from "./_hooks/useGetAllCategories";
 
-interface Category {
-  id: string;
-  name: string;
-}
+//change this to server component
 
 export default function Categories() {
-  const [categories, setCategories] = useState<Category[]>([]);
   const [newCategoryName, setNewCategoryName] = useState("");
-  const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
+
+  const { fetchCategories, data: categories, loading } = useGetAllCategories();
 
   useEffect(() => {
     fetchCategories();
   }, []);
 
-  const fetchCategories = async () => {
-    try {
-      const data = await api.get("/categories");
-      setCategories(data);
-      setIsLoading(false);
-    } catch (error) {
-      console.error("Error fetching categories:", error);
-      toast({
-        title: "Error",
-        description: "Gagal mengambil daftar kategori",
-        variant: "destructive",
-      });
-      setIsLoading(false);
-    }
-  };
-
   const handleCreateCategory = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
     try {
-      await api.post("/categories", { name: newCategoryName });
+      await api.post("/categories", JSON.stringify({ name: newCategoryName }));
       setNewCategoryName("");
       fetchCategories();
       toast({
@@ -72,7 +54,7 @@ export default function Categories() {
     }
   };
 
-  if (isLoading) {
+  if (loading) {
     return (
       <div className="flex justify-center items-center h-screen">
         <Loader2 className="mr-2 h-16 w-16 animate-spin" />

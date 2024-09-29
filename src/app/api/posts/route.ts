@@ -1,15 +1,60 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import jwt from "jsonwebtoken";
+import { PostStatus, Visibility } from "@prisma/client";
+import { z } from "zod";
+
+import { cloudinary } from "@/lib/cloudinary";
+import { UploadApiErrorResponse, UploadApiResponse } from "cloudinary";
+
+type UploadResponse =
+  | { success: true; result?: UploadApiResponse }
+  | { success: false; error: UploadApiErrorResponse };
+
+const uploadToCloudinary = (
+  fileUri: string,
+  fileName: string
+): Promise<UploadResponse> => {
+  return new Promise((resolve, reject) => {
+    cloudinary.uploader
+      .upload(fileUri, {
+        invalidate: true,
+        resource_type: "auto",
+        filename_override: fileName,
+        folder: "portfolio-article", // any sub-folder name in your cloud
+        use_filename: true,
+      })
+      .then((result) => {
+        resolve({ success: true, result });
+      })
+      .catch((error) => {
+        reject({ success: false, error });
+      });
+  });
+};
+
+const postSchema = z.object({
+  title: z.string(),
+  content: z.string(),
+  excerpt: z.string(),
+  slug: z.string(),
+  metaTitle: z.string().optional(),
+  metaDescription: z.string().optional(),
+  metaKeywords: z.string().optional(),
+  featuredImage: z.instanceof(File),
+  authorId: z.string(),
+  categoryId: z.string(),
+  status: z.nativeEnum(PostStatus),
+  visibility: z.nativeEnum(Visibility),
+  publishedOn: z.string().transform((str) => new Date(str)),
+  tags: z.string().transform((str) => JSON.parse(str) as string[]),
+});
 
 export async function POST(req: NextRequest) {
   try {
     const token = req.headers.get("Authorization")?.split(" ")[1];
     if (!token) {
-      return NextResponse.json(
-        { error: "Token tidak ditemukan" },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: "Token not found" }, { status: 401 });
     }
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as {
@@ -17,50 +62,55 @@ export async function POST(req: NextRequest) {
     };
     const userId = decoded.userId;
 
-    const {
-      title,
-      content,
-      excerpt,
-      slug,
-      tags,
-      metaTitle,
-      metaDescription,
-      metaKeywords,
-      categoryId,
-      authorId,
-      status,
-      visibility,
-      publishedOn,
-    } = await req.json();
+    const formData = await req.formData();
 
-    // Pastikan categoryId valid
+    const rawData = Object.fromEntries(formData);
+
+    const validatedData = postSchema.parse(rawData);
+    const { tags, featuredImage, ...dataPost } = validatedData;
+
+    const uniqueSlug = await prisma.post.findFirst({
+      where: { slug: dataPost.slug },
+    });
+
+    if (uniqueSlug) {
+      return NextResponse.json(
+        { error: "Slug has been used" },
+        { status: 400 }
+      );
+    }
+
     const category = await prisma.category.findUnique({
-      where: { id: categoryId },
+      where: { id: dataPost.categoryId },
     });
 
     if (!category) {
       return NextResponse.json(
-        { error: "Kategori tidak ditemukan" },
+        { error: "Category not found" },
+        { status: 400 }
+      );
+    }
+
+    const fileBuffer = await featuredImage.arrayBuffer();
+    const mimeType = featuredImage.type;
+    const encoding = "base64";
+    const base64Data = Buffer.from(fileBuffer).toString(encoding);
+
+    const fileUri = `data:${mimeType};${encoding},${base64Data}`;
+    const resImage = await uploadToCloudinary(fileUri, featuredImage.name);
+    if (!resImage.success) {
+      return NextResponse.json(
+        { error: "Failed to upload image" },
         { status: 400 }
       );
     }
 
     const post = await prisma.post.create({
       data: {
-        title,
-        excerpt,
-        slug,
-        content,
-        authorId,
-        categoryId,
-        metaTitle,
-        metaDescription,
-        metaKeywords,
-        status,
-        visibility,
-        publishedOn,
+        ...dataPost,
+        featuredImage: resImage?.result?.url,
         tagsOnPosts: {
-          create: tags.map((tagName: string) => ({
+          create: tags.map((tagName) => ({
             tag: {
               connectOrCreate: {
                 where: { name: tagName },
@@ -73,11 +123,25 @@ export async function POST(req: NextRequest) {
       },
     });
 
+    await prisma.featuredImage.create({
+      data: {
+        imageUrl: resImage.result?.url || "",
+        publicId: resImage.result?.public_id || "",
+        postId: post.id,
+      },
+    });
+
     return NextResponse.json(post, { status: 201 });
   } catch (error) {
     console.error("Error creating post:", error);
+    if (error instanceof z.ZodError) {
+      return NextResponse.json(
+        { error: "Data invalid", details: error.errors },
+        { status: 400 }
+      );
+    }
     return NextResponse.json(
-      { error: "Terjadi kesalahan saat membuat post" },
+      { error: "Error occured when create post" },
       { status: 500 }
     );
   }
@@ -95,6 +159,15 @@ export async function GET() {
             name: true,
           },
         },
+        FeaturedImage: {
+          select: {
+            imageUrl: true,
+            publicId: true,
+            post: true
+          },
+        },
+        status: true,
+
       },
       orderBy: { createdAt: "desc" },
     });
@@ -104,13 +177,16 @@ export async function GET() {
       title: article.title,
       categoryName: article.category.name,
       createdAt: article.createdAt.toISOString(),
+      featuredImage: article.FeaturedImage?.[0]?.imageUrl || '',
+      publicImageId: article.FeaturedImage?.[0]?.publicId || '',
+      status: article.status,
     }));
 
     return NextResponse.json(formattedArticles);
   } catch (error) {
     console.error("Error fetching articles:", error);
     return NextResponse.json(
-      { error: "Terjadi kesalahan saat mengambil artikel" },
+      { error: "Error occured when fetch article" },
       { status: 500 }
     );
   }

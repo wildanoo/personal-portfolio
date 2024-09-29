@@ -28,25 +28,26 @@ model User {
 }
 
 model Post {
-  id              String        @id @default(cuid())
+  id              String          @id @default(cuid())
   title           String
   content         String
   excerpt         String
-  slug            String
+  slug            String          @unique
   metaTitle       String?
   metaDescription String?
   metaKeywords    String?
   featuredImage   String?
   authorId        String
   categoryId      String
-  status          PostStatus    @default(DRAFT)
-  visibility      Visibility    @default(PUBLIC)
-  publishedOn     DateTime?     
-  user            User          @relation(fields: [authorId], references: [id])
-  category        Category      @relation(fields: [categoryId], references: [id])
-  createdAt       DateTime      @default(now())
-  updatedAt       DateTime      @updatedAt
+  status          PostStatus      @default(DRAFT)
+  visibility      Visibility      @default(PUBLIC)
+  publishedOn     DateTime?
+  user            User            @relation(fields: [authorId], references: [id])
+  category        Category        @relation(fields: [categoryId], references: [id])
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
   tagsOnPosts     TagsOnPosts[]
+  FeaturedImage   FeaturedImage[]
 
   @@map("post")
 }
@@ -94,4 +95,16 @@ model TagsOnPosts {
 
   @@id([postId, tagId])
   @@map("tag_posts_post")
+}
+
+model FeaturedImage {
+  id        String   @id @default(cuid())
+  imageUrl  String
+  publicId  String
+  postId    String
+  post      Post     @relation(fields: [postId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("featured_image")
 }
