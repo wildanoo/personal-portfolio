@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { UseFormReturn } from "react-hook-form";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -13,9 +13,19 @@ import {
 import slugify from "@sindresorhus/slugify";
 import { cn, debounce } from "@/lib/utils";
 import { api } from "@/lib/api";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { STATUS_POST, VISIBILITY_POST } from "../../_constants";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 import { CalendarIcon } from "@radix-ui/react-icons";
 import { Calendar } from "@/components/ui/calendar";
@@ -25,8 +35,9 @@ interface ArticleBasicInfoProps {
   form: UseFormReturn<any>;
 }
 
-export default function ArticleBasicInfo({ form}: ArticleBasicInfoProps) {
+export default function ArticleBasicInfo({ form }: ArticleBasicInfoProps) {
   const { control, setValue, setError, clearErrors } = form;
+  const [open, setOpen] = useState(false);
 
   const handleChangeTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
     const slug = slugify(e.target.value);
@@ -185,7 +196,7 @@ export default function ArticleBasicInfo({ form}: ArticleBasicInfoProps) {
                 render={({ field }) => (
                   <FormItem className="flex flex-col">
                     <FormLabel>Published On</FormLabel>
-                    <Popover>
+                    <Popover open={open} onOpenChange={setOpen}>
                       <PopoverTrigger asChild>
                         <FormControl>
                           <Button
@@ -210,7 +221,10 @@ export default function ArticleBasicInfo({ form}: ArticleBasicInfoProps) {
                           selected={
                             field.value ? new Date(field.value) : undefined
                           }
-                          onSelect={field.onChange}
+                          onSelect={(date) => {
+                            date && field.onChange(date);
+                            setOpen(false);
+                          }}
                           disabled={(date) =>
                             date.getTime() < new Date().setHours(0, 0, 0, 0)
                           }

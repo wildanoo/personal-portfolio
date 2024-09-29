@@ -49,7 +49,7 @@ export default function ArticleClient({ user }: { user: CustomJwtPayload }) {
       categoryId: "",
       status: undefined,
       visibility: undefined,
-      publishedOn: new Date(),
+      publishedOn: undefined,
       tags: [],
     },
   });
@@ -59,8 +59,6 @@ export default function ArticleClient({ user }: { user: CustomJwtPayload }) {
     handleSubmit,
     formState: { errors },
     setValue,
-    setError,
-    clearErrors,
   } = form;
 
   useEffect(() => {
